@@ -12,14 +12,17 @@ describe('Controller: MainCtrl', function () {
       {
         title: 'Learn Some DevOps with Donal and Will',
         completed: true,
+        highPriority: false,
         _id: 0
       }, {
         title: 'Go for Coffee',
         completed: false,
+        highPriority: false,
         _id: 1
       }, {
         title: 'Enjoy a cigar in Cuba',
         completed: false,
+        highPriority: true,
         _id: 2
       }
     ];
@@ -83,6 +86,19 @@ describe('Controller: MainCtrl', function () {
       scope.removeTodo(mockTodos[1]);
       $httpBackend.flush();
       expect(scope.todos).toEqual([mockTodos[0],mockTodos[2]]);
+    });
+  });
+
+  describe('#priority',function (){
+    it('should call the PUT api for the id of the todo to change the priority from low to high',function(){
+      scope.togglePriority(mockTodos[1]);
+      $httpBackend.expectPUT('/api/todos/1', mockTodos[1]).respond({});
+      $httpBackend.flush(); // This invokes the expectPUT from above, and will fail if not as expected.
+    });
+    it('should call the PUT api for the id of the todo to change the priority from high to low',function(){
+      scope.togglePriority(mockTodos[2]);
+      $httpBackend.expectPUT('/api/todos/2', mockTodos[2]).respond({});
+      $httpBackend.flush(); // This invokes the expectPUT from above, and will fail if not as expected.
     });
   });
 
