@@ -22,6 +22,8 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  grunt.task.loadTasks('./tasks');
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
@@ -140,6 +142,17 @@ module.exports = function (grunt) {
         },
         src: ['server/**/*.spec.js']
       },
+      all: [
+        '<%= yeoman.client %>/{app,components}/**/*.js',
+        '!<%= yeoman.client %>/{app,components}/**/*.spec.js',
+        '!<%= yeoman.client %>/{app,components}/**/*.mock.js'
+      ],
+      test: {
+        src: [
+          '<%= yeoman.client %>/{app,components}/**/*.spec.js',
+          '<%= yeoman.client %>/{app,components}/**/*.mock.js'
+        ]
+      },
       ci_client: {
         options: {
           jshintrc: 'client/.jshintrc',
@@ -161,17 +174,6 @@ module.exports = function (grunt) {
         src: [
           'server/**/*.js',
           'server/**/*.spec.js'
-        ]
-      },
-      all: [
-        '<%= yeoman.client %>/app/**/*.js',
-        '!<%= yeoman.client %>/app/**/*.spec.js',
-        '!<%= yeoman.client %>/app/**/*.mock.js'
-      ],
-      test: {
-        src: [
-          '<%= yeoman.client %>/app/**/*.spec.js',
-          '<%= yeoman.client %>/app/**/*.mock.js'
         ]
       }
     },
@@ -506,7 +508,7 @@ module.exports = function (grunt) {
       prod: {
         NODE_ENV: 'production'
       },
-      mochajunit: {
+      jenkins: {
         MOCHA_FILE: 'reports/server/mocha/test-results.xml'
       },
       all: localConfig
@@ -701,15 +703,17 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', function(target, environ) {
     environ = environ !== undefined ? environ : 'test';
+    var reporter = 'terminal';
+    if (target === 'server-jenkins') {
+      target = 'server';
+      reporter = 'junit';
+      grunt.task.run(['env:jenkins']);
+    }
     if (target === 'server') {
-      if (environ !== 'test') {
-        grunt.task.run(['env:mochajunit']);
-      }
       return grunt.task.run([
-        'clean:mochareports',
         'env:all',
         'env:'+environ,
-        'mochaTest:' + (environ === 'test' ? 'terminal' : 'junit')
+        'mochaTest:' + reporter
       ]);
     }
 

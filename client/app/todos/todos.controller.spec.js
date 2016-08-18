@@ -1,4 +1,4 @@
-
+'use strict';
 
 describe('Controller: MainCtrl', function () {
 
@@ -16,17 +16,14 @@ describe('Controller: MainCtrl', function () {
       {
         title: 'Learn Some DevOps with Donal and Will',
         completed: true,
-        highPriority: false,
         _id: 0
       }, {
         title: 'Go for Coffee',
         completed: false,
-        highPriority: false,
         _id: 1
       }, {
         title: 'Enjoy a cigar in Cuba',
         completed: false,
-        highPriority: true,
         _id: 2
       }
     ];
@@ -60,7 +57,8 @@ describe('Controller: MainCtrl', function () {
       $httpBackend.expectPOST('/api/todos').respond();
     });
     it('should add the todo', function () {
-      scope.addTodo(mockTodo(4, false));
+      scope.edits.newTodo = 'Learn some client side testing';
+      scope.addTodo();
       $httpBackend.flush();
       expect(scope.todos.length).toBe(4);
     });
