@@ -1,4 +1,4 @@
-'use strict';
+
 
 describe('Controller: MainCtrl', function () {
 
@@ -68,18 +68,35 @@ describe('Controller: MainCtrl', function () {
 
   describe('#toggleCompleted', function () {
     it('should change the status of the todo to completed and call the todos PUT api with the new status', function() {
-      mockTodos[1].completed = true; // describes the environment
-      scope.toggleCompleted(mockTodos[1]); // does the actual execution
-      $httpBackend.expectPUT('/api/todos/' + 1, mockTodos[1]).respond({}); // mocks the response from the API and uses jasmine's BDD to the units behavior
-      $httpBackend.flush(); // required to make the mock PUT response above actually return
-      expect(scope.todos[1].completed).toBe(false); // asserts the result (angular scope is the data/model provided to the view)
+      mockTodos[1].completed = true // describes the environment
+      scope.toggleCompleted(mockTodos[1]) // does the actual execution
+      $httpBackend.expectPUT('/api/todos/' + 1, mockTodos[1]).respond({}) // mocks the response from the API and uses jasmine's BDD to the units behavior
+      $httpBackend.flush() // required to make the mock PUT response above actually return
+      expect(scope.todos[1].completed).toBe(false) // asserts the result (angular scope is the data/model provided to the view)
     });
     it('should change the status of the todo to not completed and call the todos PUT api with the new status', function() {
-      mockTodos[1].completed = false; // describes the environment
-      scope.toggleCompleted(mockTodos[1]); // does the actual execution
-      $httpBackend.expectPUT('/api/todos/' + 1, mockTodos[1]).respond({}); // mocks the response from the API and uses jasmine's BDD to the units behavior
-      $httpBackend.flush(); // required to make the mock PUT response above actually return
-      expect(scope.todos[1].completed).toBe(true); // asserts the result (angular scope is the data/model provided to the view)
+      mockTodos[1].completed = false // describes the environment
+      scope.toggleCompleted(mockTodos[1]) // does the actual execution
+      $httpBackend.expectPUT('/api/todos/' + 1, mockTodos[1]).respond({}) // mocks the response from the API and uses jasmine's BDD to the units behavior
+      $httpBackend.flush() // required to make the mock PUT response above actually return
+      expect(scope.todos[1].completed).toBe(true) // asserts the result (angular scope is the data/model provided to the view)
+    });
+  });
+
+  describe('#togglePriority', function () {
+    it('should change the priority of the todo to high and call the todos PUT api with the new priority', function() {
+      mockTodos[1].highPriority = false // describes the environment
+      scope.togglePriority(mockTodos[1]) // does the actual execution
+      $httpBackend.expectPUT('/api/todos/' + 1, mockTodos[1]).respond({}) // mocks the response from the API and uses jasmine's BDD to the units behavior
+      $httpBackend.flush() // required to make the mock PUT response above actually return
+      expect(scope.todos[1].highPriority).toBe(true) // asserts the result (angular scope is the data/model provided to the view)
+    });
+    it('should change the priority of the todo to low and call the todos PUT api with the new priority', function() {
+      mockTodos[1].highPriority = true // describes the environment
+      scope.togglePriority(mockTodos[1]) // does the actual execution
+      $httpBackend.expectPUT('/api/todos/' + 1, mockTodos[1]).respond({}) // mocks the response from the API and uses jasmine's BDD to the units behavior
+      $httpBackend.flush() // required to make the mock PUT response above actually return
+      expect(scope.todos[1].highPriority).toBe(false) // asserts the result (angular scope is the data/model provided to the view)
     });
   });
 
@@ -95,19 +112,6 @@ describe('Controller: MainCtrl', function () {
       scope.removeTodo(mockTodos[1]);
       $httpBackend.flush();
       expect(scope.todos).toEqual([mockTodos[0],mockTodos[2]]);
-    });
-  });
-
-  describe('#priority',function (){
-    it('should call the PUT api for the id of the todo to change the priority from low to high',function(){
-      scope.togglePriority(mockTodos[1]);
-      $httpBackend.expectPUT('/api/todos/1', mockTodos[1]).respond({});
-      $httpBackend.flush(); // This invokes the expectPUT from above, and will fail if not as expected.
-    });
-    it('should call the PUT api for the id of the todo to change the priority from high to low',function(){
-      scope.togglePriority(mockTodos[2]);
-      $httpBackend.expectPUT('/api/todos/2', mockTodos[2]).respond({});
-      $httpBackend.flush(); // This invokes the expectPUT from above, and will fail if not as expected.
     });
   });
 
