@@ -1,11 +1,17 @@
 'use strict';
 
+var hasClass = function (element, cls) {
+  return element.getAttribute('class').then(function (classes) {
+    return classes.split(' ').indexOf(cls) !== -1;
+  });
+};
+
 describe('Main View', function () {
   var page;
 
   beforeEach(function () {
     browser.get('/');
-    page = require('./main.po');
+    page = require('./todos.po');
   });
 
   describe('on page load', function () {
@@ -15,7 +21,7 @@ describe('Main View', function () {
 
     it('should display all the todos in the list', function () {
       expect(page.todoEls.count()).toBe(2);
-      expect(page.todoEls.get(0).getText()).toBe('Learn Some DevOps with Donal and Will');
+      expect(page.todoEls.get(0).getText()).toBe('Learn some stuff about Jenkins');
       expect(page.todoEls.get(1).getText()).toBe('Go for Coffee');
     });
   });
@@ -42,21 +48,36 @@ describe('Main View', function () {
     });
 
     describe('on removing todo', function () {
-      var todoElToRemove;
+
       beforeEach(function () {
         page.newToDoInputEl.sendKeys('Learn another language');
         page.newToDoInputEl.sendKeys(protractor.Key.ENTER);
       });
 
       it('should remove the new todo', function (done) {
-
-        todoElToRemove = page.todoEls.get(0);
-        browser.actions().mouseMove(todoElToRemove).perform();
+        var todoElToRemove = page.todoEls.get(0);
+        browser.actions().mouseMove(todoElToRemove).perform(); // hover over the todos to make remove icon appear
         todoElToRemove.element(by.css('.destroy')).click().then(function(){
           expect(page.todoEls.count()).toBe(0);
           done();
         });
 
+      });
+    });
+
+    describe('on toggling todo priority', function () {
+      beforeEach(function () {
+        page.newToDoInputEl.sendKeys('Write an e2e that tests togglePriority');
+        page.newToDoInputEl.sendKeys(protractor.Key.ENTER);
+      });
+      it('should change the priority to high and mark it with a high-priority icon', function (done) {
+        var todoElToTogglePriority = page.todoEls.get(0);
+        browser.actions().mouseMove(todoElToTogglePriority).perform(); // hover over the todos to make high-priority icon appear
+        var highPriorityToggleEl = todoElToTogglePriority.element(by.css('.high-priority'));
+        highPriorityToggleEl.click().then(function(){
+          expect(hasClass(highPriorityToggleEl, 'checked')).toBe(true);
+          done();
+        });
       });
     });
 
