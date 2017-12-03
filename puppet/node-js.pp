@@ -2,29 +2,24 @@
 
 class { '::nodejs':
   repo_url_suffix => 'node_4.x',
-} ->
-file { '/usr/bin/node':
-  ensure => 'link',
-  target => '/usr/bin/nodejs',
-  mode   => '0755',
 }
 
 package { 'grunt-cli':
   ensure   => '1.2.0',
   provider => 'npm',
-  require  => File['/usr/bin/node']
+  require  => Package['nodejs']
 }
 
 package { 'http-server':
   ensure   => '0.9.0',
   provider => 'npm',
-  require  => File['/usr/bin/node']
+  require  => Package['nodejs']
 }
 
 package { 'phantomjs':
   ensure   =>  '2.1.1',
   provider => 'npm',
-  require  =>  File['/usr/bin/node']
+  require  => Package['nodejs']
 } ->
 
 file { ['/etc/profile.d/phantomjs.sh','/var/lib/jenkins/.profile']:
