@@ -24,7 +24,7 @@ angular.module('todolistApp')
 
     $scope.togglePriority = function (todo) {
       if (!todo) {
-        return
+        return;
       }
       todo.highPriority = !todo.highPriority;
       $http.put('/api/todos/' + todo._id, todo);
