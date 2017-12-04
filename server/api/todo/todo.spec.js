@@ -113,6 +113,20 @@ describe('PUT /api/todos/:id', function() {
         done();
       });
   });
+  it('should update the todo with highPriority status', function(done) {
+    request(app)
+      .put('/api/todos/' + todoId)
+      .send({title: 'LOVE endpoint/server side testing!', completed: true, highPriority: true})
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end(function(err, res) {
+        if (err) return done(err);
+        res.body.should.have.property('_id');
+        res.body.title.should.equal('LOVE endpoint/server side testing!');
+        res.body.highPriority.should.equal(true);
+        done();
+      });
+  });
   it('should return 404 for valid mongo object id that does not exist', function(done){
     request(app)
       .put('/api/todos/' + 'abcdef0123456789ABCDEF01')
