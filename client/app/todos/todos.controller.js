@@ -22,6 +22,14 @@ angular.module('todolistApp')
       $http.put('/api/todos/' + todo._id, todo);
     };
 
+    $scope.togglePriority = function (todo) {
+      if (!todo) {
+        return
+      }
+      todo.highPriority = !todo.highPriority;
+      $http.put('/api/todos/' + todo._id, todo);
+    };
+
     $scope.removeTodo = function (todo) {
       if (!todo) {
         console.warn('no todo provided');
